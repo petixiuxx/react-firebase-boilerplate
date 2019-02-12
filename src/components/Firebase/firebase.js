@@ -14,6 +14,7 @@ const config = {
 class Firebase {
   constructor() {
     app.initializeApp(config);
+    this.emailAuthProvider = app.auth.EmailAuthProvider;
     this.auth = app.auth();
     this.db = app.database();
     this.googleProvider = new app.auth.GoogleAuthProvider();
@@ -33,6 +34,11 @@ class Firebase {
   doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
 
   doSignOut = () => this.auth.signOut();
+
+  doSendEmailVerification = () =>
+    this.auth.currentUser.sendEmailVerification({
+      url: process.env.REACT_APP_CONFIRMATION_EMAIL_REDIRECT
+    });
 
   //User API
   user = uid => this.db.ref(`users/${uid}`);
@@ -56,7 +62,9 @@ class Firebase {
             authUser = {
               uid: authUser.uid,
               email: authUser.email,
-              ...dbUser
+              ...dbUser,
+              emailVerified: authUser.emailVerified,
+              providerData: authUser.providerData
             };
 
             next(authUser);

@@ -63,6 +63,9 @@ class SignUpFormBase extends React.Component {
         });
       })
       .then(() => {
+        return this.props.firebase.doSendEmailVerification();
+      })
+      .then(() => {
         this.setState({
           ...INTIAL_STATE
         });

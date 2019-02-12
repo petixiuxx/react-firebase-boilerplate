@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { withAuthorization } from "../Session";
+import { compose } from "recompose";
+import { withAuthorization, withEmailVerification } from "../Session";
 
 class Home extends Component {
   render() {
@@ -8,4 +9,7 @@ class Home extends Component {
 }
 const condition = authUser => !!authUser;
 
-export default withAuthorization(condition)(Home);
+export default compose(
+  withEmailVerification,
+  withAuthorization(condition)
+)(Home);
